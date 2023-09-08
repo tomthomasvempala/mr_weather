@@ -78,6 +78,8 @@ export class TelegramService {
             const timeRef = await this.db.collection('metadata').doc('scheduledTime').get()
             const time = timeRef.data()
             this.bot.sendMessage(msg.chat.id, 'Subscription succesful. You will get updated regarding weather at ' + msg.text + ' at ' + time.hour + ':' + time.minute + ' everyday.')
+            
+            this.chatState[msg.chat.id] = undefined
         }
         else {
             this.bot.sendMessage(msg.chat.id, 'Didnt quite get it. Enter /help for command manual')
