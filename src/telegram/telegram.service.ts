@@ -60,6 +60,8 @@ export class TelegramService {
     }
 
     async handleUnsubscribeCommand(msg) {
+        
+        this.chatState[msg.chat.id] = undefined
         this.db.collection('subscribers').where('user', '==', msg.chat.id).get().then((snap) => {
             snap.forEach((doc) => {
                 doc.ref.delete()
@@ -86,6 +88,8 @@ export class TelegramService {
         }
     }
     async handleNowCommand(msg) {
+        
+        this.chatState[msg.chat.id] = undefined
         const data = await this.getUserData()
         const subscriber = data.find((e) => e.user == msg.chat.id)
         console.log(subscriber)
@@ -100,6 +104,7 @@ export class TelegramService {
     }
 
     async handleHelpCommand(msg) {
+        this.chatState[msg.chat.id] = undefined
         this.bot.sendMessage(msg.chat.id, `
         Welcome to Mr. Weather! Here are the available commands:
         
