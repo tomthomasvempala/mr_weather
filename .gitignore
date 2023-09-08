@@ -35,4 +35,3 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .env
-firebase_config/mrweather-9ecc0-firebase-adminsdk-917e0-c3a11ab34b.json
