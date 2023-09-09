@@ -61,7 +61,7 @@ export class TelegramService {
 
     async handleUnsubscribeCommand(msg) {
         
-        this.chatState[msg.chat.id] = undefined
+        this.chatState[msg.chat.id] = ''
         this.db.collection('subscribers').where('user', '==', msg.chat.id).get().then((snap) => {
             snap.forEach((doc) => {
                 doc.ref.delete()
@@ -72,7 +72,7 @@ export class TelegramService {
     }
 
     async handleOtherMessages(msg) {
-        if (this.chatState[msg.chat.id] == 'locationReq') {
+        if (this.chatState[msg.chat.id] === 'locationReq') {
 
             const collectionRef = this.db.collection('subscribers');
             await collectionRef.add({ user: msg.chat.id, location: msg.text })
@@ -81,7 +81,7 @@ export class TelegramService {
             const time = timeRef.data()
             this.bot.sendMessage(msg.chat.id, 'Subscription succesful. You will get updated regarding weather at ' + msg.text + ' at ' + time.hour + ':' + time.minute + ' everyday.')
             
-            this.chatState[msg.chat.id] = undefined
+            this.chatState[msg.chat.id] = ''
         }
         else {
             this.bot.sendMessage(msg.chat.id, 'Didnt quite get it. Enter /help for command manual')
@@ -89,7 +89,7 @@ export class TelegramService {
     }
     async handleNowCommand(msg) {
         
-        this.chatState[msg.chat.id] = undefined
+        this.chatState[msg.chat.id] = ''
         const data = await this.getUserData()
         const subscriber = data.find((e) => e.user == msg.chat.id)
         console.log(subscriber)
@@ -104,7 +104,7 @@ export class TelegramService {
     }
 
     async handleHelpCommand(msg) {
-        this.chatState[msg.chat.id] = undefined
+        this.chatState[msg.chat.id] = ''
         this.bot.sendMessage(msg.chat.id, `
         Welcome to Mr. Weather! Here are the available commands:
         
@@ -120,7 +120,7 @@ export class TelegramService {
 
     // Set up command handlers
     handleMessages() {
-        this.bot.onText(/\/sub/, (msg) => this.handleSubscribeCommand(msg));
+        this.bot.onText(/\/sub/, (msg) =>this.handleSubscribeCommand(msg));
         this.bot.onText(/\/unsub/, (msg) => this.handleUnsubscribeCommand(msg));
         this.bot.onText(/\/now/, (msg) => this.handleNowCommand(msg));
         this.bot.onText(/\/help/, (msg) => this.handleHelpCommand(msg));
